@@ -6,47 +6,41 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    //変数
    reg [3:0] cnt3, cnt2, cnt1, cnt0;
 	reg [5:0] sec;//秒カウンタ
-   reg       cy0, cy1, cy2, cy3, cy4;
+   reg       cy0, cy1, cy2, cy3, cy4;//繰り上げcy4は時間1桁目が4になった時のフラグ
 	reg [22:0] div;	//分周回路用
 
 	assign SLED3 = dec_led( cnt3 );
 	assign SLED2 = dec_led( cnt2 );
    assign SLED1 = dec_led( cnt1 );
    assign SLED0 = dec_led( cnt0 );
-	//assign DLED  = led ( sec );
+	assign DLED  = led ( sec );
 
 	always @(posedge pCLK) begin
 		div <= div + 1'b1;
 	end
 
-   // 秒
-   always @( posedge div[22] or negedge nRST ) begin
+
+
+   // 秒done
+   always @( posedge div[10] or negedge nRST ) begin//div[15]がいい感じデフォ22
       if ( nRST == 1'b0 ) begin
-         sec <= 4'b0000;
+         sec <= 4'b00000000;
          cy0  <= 1'b0;
-      end else if ( sec == 60 ) begin
-         sec <= 4'b0000;
+      end else if ( sec == 59 ) begin
+         sec <= 4'b00000000;
          cy0  <= 1'b1;
-      end else if ( sec == 0 ) begin
-         sec <= cnt0 + 1'b1;
-         cy0  <= 1'b0;
-			if(sec % 2 == 0) begin
-				DLED[0] = 1;
-			end else begin
-				DLED[0] = 0;
-			end
       end else begin
-         sec <= cnt0 + 1'b1;
+         sec <= sec + 1'b1;
          cy0  <= 1'b0;
       end
    end
 
-   // 分1桁目
+   // 分1桁目done
    always @( posedge cy0 or negedge nRST ) begin
       if ( nRST == 1'b0 ) begin
          cnt0 <= 4'b0000;
 			cy1  <= 1'b0;
-      end else if ( cnt0 == 6 ) begin
+      end else if ( cnt0 == 9 ) begin
          cnt0 <= 4'b0000;
 			cy1  <= 1'b1;
       end else begin
@@ -54,13 +48,13 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 			cy1  <= 1'b0;
       end
    end
-	
-	// 分2桁目
-   always @( posedge cy0 or negedge nRST ) begin
+
+	// 分2桁目done
+   always @( posedge cy1 or negedge nRST ) begin
       if ( nRST == 1'b0 ) begin
          cnt1 <= 4'b0000;
 			cy2  <= 1'b0;
-      end else if ( cnt1 == 6 ) begin
+      end else if ( cnt1 == 5 ) begin
          cnt1 <= 4'b0000;
 			cy2  <= 1'b1;
       end else begin
@@ -70,24 +64,36 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    end
 
 	//時間1桁目
-	always @( posedge cy1 or negedge nRST ) begin
+	always @( posedge cy2 or negedge nRST ) begin
       if ( nRST == 1'b0 ) begin
          cnt2 <= 4'b0000;
 			cy3  <= 1'b0;
       end else if ( cnt2 == 9 ) begin
          cnt2 <= 4'b0000;
 			cy3  <= 1'b1;
-      end else begin
+		end else begin
+			if( cnt2 == 4 ) begin
+				cy4 <= 1'b1;
+			end
          cnt2 <= cnt2 + 1'b1;
 			cy3  <= 1'b0;
       end
+		
+		/*if ( nRST == 1'b0 ) begin
+         cnt2 <= 4'b0000;
+			//cy3  <= 1'b0;
+      end else if( cnt2 == 4 ) begin
+			cy4 <= 1'b1;
+      end else begin
+			cy4 <= 1'b0;
+		end*/
    end
-	
+
 	//時間2桁目
-	always @( posedge cy2 or negedge nRST ) begin
+	always @( posedge cy3 or negedge nRST ) begin
       if ( nRST == 1'b0 ) begin
          cnt3 <= 4'b0000;
-      end else if ( cnt3 == 9 ) begin
+      end else if ( cnt3 == 2 && cy4 == 1'b1) begin
          cnt3 <= 4'b0000;
       end else begin
          cnt3 <= cnt3 + 1'b1;
@@ -113,16 +119,17 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
          endcase
       end
    endfunction
-	
+
 	//DLEDの表示用
 	function [7:0] led;
-		input[5:0] in;
+		input[7:0] in;
 		//ビットシフトで秒を表示
 		if(in == 0) begin
 			led = 8'b11111111;
 		end
 		else begin
-			led = led << 1;
+			led = ~(8'b11111111 & in);
 		end
+      //led = 8'b01110110;
 	endfunction
 endmodule
