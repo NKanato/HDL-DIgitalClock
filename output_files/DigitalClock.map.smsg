@@ -1,0 +1,1 @@
+Warning (10268): Verilog HDL information at DigitalClock.v(23): always construct contains both blocking and non-blocking assignments File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 23

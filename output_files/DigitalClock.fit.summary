@@ -1,0 +1,11 @@
+Fitter Status : Successful - Thu Dec 21 11:52:18 2023
+Quartus Prime Version : 21.1.0 Build 842 10/21/2021 SJ Lite Edition
+Revision Name : DigitalClock
+Top-level Entity Name : DigitalClock
+Family : MAX II
+Device : EPM570T100C5
+Timing Models : Final
+Total logic elements : 76 / 570 ( 13 % )
+Total pins : 50 / 76 ( 66 % )
+Total virtual pins : 0
+UFM blocks : 0 / 1 ( 0 % )

@@ -1,0 +1,77 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Setup 'div[10]'
+Slack : -4.812
+TNS   : -28.315
+
+Type  : Setup 'pCLK'
+Slack : -3.955
+TNS   : -36.605
+
+Type  : Setup 'cy2'
+Slack : -1.903
+TNS   : -8.798
+
+Type  : Setup 'cy0'
+Slack : -1.878
+TNS   : -9.022
+
+Type  : Setup 'cy3'
+Slack : -1.867
+TNS   : -7.465
+
+Type  : Setup 'cy1'
+Slack : -1.839
+TNS   : -8.647
+
+Type  : Hold 'pCLK'
+Slack : -2.398
+TNS   : -2.398
+
+Type  : Hold 'cy2'
+Slack : 1.710
+TNS   : 0.000
+
+Type  : Hold 'cy0'
+Slack : 1.736
+TNS   : 0.000
+
+Type  : Hold 'cy1'
+Slack : 1.741
+TNS   : 0.000
+
+Type  : Hold 'cy3'
+Slack : 1.746
+TNS   : 0.000
+
+Type  : Hold 'div[10]'
+Slack : 2.163
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'pCLK'
+Slack : -2.289
+TNS   : -2.289
+
+Type  : Minimum Pulse Width 'cy0'
+Slack : 0.234
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'cy1'
+Slack : 0.234
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'cy2'
+Slack : 0.234
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'cy3'
+Slack : 0.234
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'div[10]'
+Slack : 0.234
+TNS   : 0.000
+
+------------------------------------------------------------
