@@ -71,13 +71,13 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
       end else begin
 			if ( cnt3 == 4'b0000 ) begin
 				cnt2 <= cnt2 + 1'b1;
-				if(cnt2 == 9) begin
-					cnt2 = 1'b0;
+				if(cnt2 == 4'h9) begin
+					cnt2 <= 4'b0000;
 					cnt3 <= cnt3 + 1'b1;
 				end
 			end else begin
 				cnt2 <= cnt2 + 1'b1;
-				if(cnt2 == 1) begin
+				if(cnt2 == 4'h1) begin
 					cnt2 <= 4'b0000;
 					cnt3 <= 4'b0000;
 				end
@@ -85,33 +85,6 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 		end
    end
 
-	//時間1桁目
-	/*always @( posedge cy2 or negedge nRST ) begin
-      if ( nRST == 1'b0 ) begin
-         cnt2 <= 4'b0000;
-			cy3  <= 1'b0;
-      end else if ( cnt2 == 9 ) begin
-         cnt2 <= 4'b0000;	//時間1桁目を0表示
-			cy3  <= 1'b1;		//時間2桁目に繰り上げ信号
-		end else begin
-			if( cnt2 == 4 && cy3 == 1) begin
-				cy4 <= 1'b1;
-			end
-         cnt2 <= cnt2 + 1'b1;
-			cy3  <= 1'b0;
-      end
-   end
-
-	//時間2桁目
-	always @( posedge cy3 or negedge nRST ) begin
-      if ( nRST == 1'b0 ) begin
-         cnt3 <= 4'b0000;
-      end else if ( cnt3 == 2 && cy4 == 1'b1) begin
-         cnt3 <= 4'b0000;
-      end else begin
-         cnt3 <= cnt3 + 1'b1;
-      end
-   end*/
 
    //7セグの数字を表示
    function [7:0] dec_led;
