@@ -9,6 +9,7 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    reg       cy0, cy1, cy2, cy3, cy4;//繰り上げcy4は時間1桁目が4になった時のフラグ
 	reg [22:0] div;	//分周回路用
    reg clk;
+	reg switch_h;//12時間表記と24時間表記を切り替えるための変数
 	reg [22:0] divFigure;
 
 	assign SLED3 = dec_led( cnt3 );
@@ -17,9 +18,7 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    assign SLED0 = dec_led( cnt0 );
 	assign DLED  = led ( sec );
 
-	/*always @(posedge pCLK) begin
-		div <= div + 1'b1;
-	end*/
+
    always @( posedge pCLK or negedge nRST ) begin
 
       if ( nRST == 1'b0 ) begin
@@ -34,14 +33,22 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
       end
    end
 
-	always @( posedge pCLK or negedge nRST)begin
-		if (nRST == 1'b0)begin
-			divFigure <= 7999999;
-			/*if (TSW[0] == 1) begin//TSW[0]が「1」のとき時計の動作が速くなる
+
+	always @( posedge pCLK or negedge nRST)begin	//切り替え用のスイッチを読む
+	if ( pCLK == 1'b1 ) begin	//スイッチはクロックの立ち上がりの時に読まないとだめらしい
+			//時間が進む速さ切り替え
+			if (TSW[0] == 1) begin
 				divFigure <= 7999999;
+			end else if (TSW[0] == 0) begin
+				divFigure <= 399;//実験用で速くしておく。もとは3999999
+			end
+
+			//12/24時間切り替え
+			if(TSW[1] == 0) begin
+				switch_h <= 1'b1;
 			end else begin
-				divFigure <= 15999998;
-			end*/
+				switch_h <= 1'b0;
+			end
 		end
 	end
 
@@ -93,23 +100,47 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
       end
    end
 
-	//時間, always文にまとめたやつ
+	//時間, 1つのalways文にまとめたやつ
 	always @( posedge cy2 or negedge nRST ) begin
       if ( nRST == 1'b0 ) begin
          cnt2 <= 4'b0000;
 			cnt3 <= 4'b0000;
-      end else begin
-			if ( cnt3 == 4'b0000 ) begin
-				cnt2 <= cnt2 + 1'b1;
-				if(cnt2 == 4'h9) begin
-					cnt2 <= 4'b0000;
-					cnt3 <= cnt3 + 1'b1;
+      end else begin//12時間↓↓↓
+			if(switch_h == 1'b0) begin
+				if ( cnt3 == 4'b0000 ) begin
+					cnt2 <= cnt2 + 1'b1;
+					if(cnt2 == 4'h9) begin
+						cnt2 <= 4'b0000;
+						cnt3 <= cnt3 + 1'b1;
+					end
+				end else begin
+					cnt2 <= cnt2 + 1'b1;
+					if(cnt2 == 4'h1) begin
+						cnt2 <= 4'b0000;
+						cnt3 <= 4'b0000;
+					end
 				end
-			end else begin
-				cnt2 <= cnt2 + 1'b1;
-				if(cnt2 == 4'h1) begin
-					cnt2 <= 4'b0000;
-					cnt3 <= 4'b0000;
+			end else begin//24時間↓↓↓
+				if(switch_h == 1'b1) begin
+					if ( cnt3 == 4'b0000 ) begin
+						cnt2 <= cnt2 + 1'b1;
+						if(cnt2 == 4'd9) begin
+							cnt2 <= 4'b0000;
+							cnt3 <= cnt3 + 1'b1;
+						end
+					end else if ( cnt3 == 4'b0001) begin
+						cnt2 <= cnt2 + 1'b1;
+						if(cnt2 == 4'd9) begin
+							cnt2 <= 4'b0000;
+							cnt3 <= cnt3 + 1'b1;
+						end
+					end else if ( cnt3 == 4'b0010 )begin
+						cnt2 <= cnt2 + 1'b1;
+						if(cnt2 == 4'd3) begin
+							cnt2 <= 4'b0000;
+							cnt3 <= 4'b0000;
+						end
+					end
 				end
 			end
 		end
