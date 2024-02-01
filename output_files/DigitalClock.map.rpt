@@ -1,5 +1,5 @@
 Analysis & Synthesis report for DigitalClock
-Thu Dec 21 11:52:13 2023
+Thu Feb  1 11:57:52 2024
 Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 
 
@@ -13,9 +13,11 @@ Quartus Prime Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
   5. Analysis & Synthesis Source Files Read
   6. Analysis & Synthesis Resource Usage Summary
   7. Analysis & Synthesis Resource Utilization by Entity
-  8. Registers Removed During Synthesis
-  9. General Register Statistics
- 10. Analysis & Synthesis Messages
+  8. User-Specified and Inferred Latches
+  9. Registers Removed During Synthesis
+ 10. General Register Statistics
+ 11. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 12. Analysis & Synthesis Messages
 
 
 
@@ -42,12 +44,12 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                              ;
 +-----------------------------+---------------------------------------------+
-; Analysis & Synthesis Status ; Successful - Thu Dec 21 11:52:13 2023       ;
+; Analysis & Synthesis Status ; Successful - Thu Feb  1 11:57:52 2024       ;
 ; Quartus Prime Version       ; 21.1.0 Build 842 10/21/2021 SJ Lite Edition ;
 ; Revision Name               ; DigitalClock                                ;
 ; Top-level Entity Name       ; DigitalClock                                ;
 ; Family                      ; MAX II                                      ;
-; Total logic elements        ; 76                                          ;
+; Total logic elements        ; 118                                         ;
 ; Total pins                  ; 50                                          ;
 ; Total virtual pins          ; 0                                           ;
 ; UFM blocks                  ; 0 / 1 ( 0 % )                               ;
@@ -155,33 +157,33 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------+-------+
 ; Resource                                    ; Usage ;
 +---------------------------------------------+-------+
-; Total logic elements                        ; 76    ;
-;     -- Combinational with no register       ; 39    ;
-;     -- Register only                        ; 2     ;
-;     -- Combinational with a register        ; 35    ;
+; Total logic elements                        ; 118   ;
+;     -- Combinational with no register       ; 71    ;
+;     -- Register only                        ; 1     ;
+;     -- Combinational with a register        ; 46    ;
 ;                                             ;       ;
 ; Logic element usage by number of LUT inputs ;       ;
-;     -- 4 input functions                    ; 46    ;
-;     -- 3 input functions                    ; 8     ;
-;     -- 2 input functions                    ; 15    ;
+;     -- 4 input functions                    ; 53    ;
+;     -- 3 input functions                    ; 26    ;
+;     -- 2 input functions                    ; 33    ;
 ;     -- 1 input functions                    ; 5     ;
 ;     -- 0 input functions                    ; 0     ;
 ;                                             ;       ;
 ; Logic elements by mode                      ;       ;
-;     -- normal mode                          ; 62    ;
-;     -- arithmetic mode                      ; 14    ;
+;     -- normal mode                          ; 91    ;
+;     -- arithmetic mode                      ; 27    ;
 ;     -- qfbk mode                            ; 0     ;
 ;     -- register cascade mode                ; 0     ;
-;     -- synchronous clear/load mode          ; 0     ;
-;     -- asynchronous clear/load mode         ; 26    ;
+;     -- synchronous clear/load mode          ; 23    ;
+;     -- asynchronous clear/load mode         ; 47    ;
 ;                                             ;       ;
-; Total registers                             ; 37    ;
-; Total logic cells in carry chains           ; 16    ;
+; Total registers                             ; 47    ;
+; Total logic cells in carry chains           ; 29    ;
 ; I/O pins                                    ; 50    ;
 ; Maximum fan-out node                        ; nRST  ;
-; Maximum fan-out                             ; 26    ;
-; Total fan-out                               ; 346   ;
-; Average fan-out                             ; 2.75  ;
+; Maximum fan-out                             ; 47    ;
+; Total fan-out                               ; 519   ;
+; Average fan-out                             ; 3.09  ;
 +---------------------------------------------+-------+
 
 
@@ -190,20 +192,46 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------+-------------+--------------+------------+------+--------------+--------------+-------------------+------------------+-----------------+------------+---------------------+--------------+--------------+
 ; Compilation Hierarchy Node ; Logic Cells ; LC Registers ; UFM Blocks ; Pins ; Virtual Pins ; LUT-Only LCs ; Register-Only LCs ; LUT/Register LCs ; Carry Chain LCs ; Packed LCs ; Full Hierarchy Name ; Entity Name  ; Library Name ;
 +----------------------------+-------------+--------------+------------+------+--------------+--------------+-------------------+------------------+-----------------+------------+---------------------+--------------+--------------+
-; |DigitalClock              ; 76 (76)     ; 37           ; 0          ; 50   ; 0            ; 39 (39)      ; 2 (2)             ; 35 (35)          ; 16 (16)         ; 0 (0)      ; |DigitalClock       ; DigitalClock ; work         ;
+; |DigitalClock              ; 118 (118)   ; 47           ; 0          ; 50   ; 0            ; 71 (71)      ; 1 (1)             ; 46 (46)          ; 29 (29)         ; 0 (0)      ; |DigitalClock       ; DigitalClock ; work         ;
 +----------------------------+-------------+--------------+------------+------+--------------+--------------+-------------------+------------------+-----------------+------------+---------------------+--------------+--------------+
 Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
 
 
-+---------------------------------------------------------------------------------+
-; Registers Removed During Synthesis                                              ;
-+----------------------------------------+----------------------------------------+
-; Register name                          ; Reason for Removal                     ;
-+----------------------------------------+----------------------------------------+
-; cy4                                    ; Stuck at VCC due to stuck port data_in ;
-; div[11..22]                            ; Lost fanout                            ;
-; Total Number of Removed Registers = 13 ;                                        ;
-+----------------------------------------+----------------------------------------+
++----------------------------------------------------------------------------------------------------+
+; User-Specified and Inferred Latches                                                                ;
++-----------------------------------------------------+---------------------+------------------------+
+; Latch Name                                          ; Latch Enable Signal ; Free of Timing Hazards ;
++-----------------------------------------------------+---------------------+------------------------+
+; switch_h                                            ; pCLK                ; yes                    ;
+; divFigure[4]                                        ; pCLK                ; yes                    ;
+; divFigure[5]                                        ; pCLK                ; yes                    ;
+; divFigure[6]                                        ; pCLK                ; yes                    ;
+; divFigure[7]                                        ; pCLK                ; yes                    ;
+; divFigure[8]                                        ; pCLK                ; yes                    ;
+; divFigure[10]                                       ; pCLK                ; yes                    ;
+; divFigure[11]                                       ; pCLK                ; yes                    ;
+; divFigure[12]                                       ; pCLK                ; yes                    ;
+; divFigure[15]                                       ; pCLK                ; yes                    ;
+; divFigure[16]                                       ; pCLK                ; yes                    ;
+; divFigure[17]                                       ; pCLK                ; yes                    ;
+; divFigure[18]                                       ; pCLK                ; yes                    ;
+; divFigure[19]                                       ; pCLK                ; yes                    ;
+; divFigure[20]                                       ; pCLK                ; yes                    ;
+; divFigure[21]                                       ; pCLK                ; yes                    ;
+; divFigure[22]                                       ; pCLK                ; yes                    ;
+; Number of user-specified and inferred latches = 17  ;                     ;                        ;
++-----------------------------------------------------+---------------------+------------------------+
+Note: All latches listed above may not be present at the end of synthesis due to various synthesis optimizations.
+
+
++--------------------------------------------------------------------------------+
+; Registers Removed During Synthesis                                             ;
++---------------------------------------+----------------------------------------+
+; Register name                         ; Reason for Removal                     ;
++---------------------------------------+----------------------------------------+
+; cnt3[2,3]                             ; Stuck at GND due to stuck port data_in ;
+; Total Number of Removed Registers = 2 ;                                        ;
++---------------------------------------+----------------------------------------+
 
 
 +------------------------------------------------------+
@@ -211,14 +239,25 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 +----------------------------------------------+-------+
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
-; Total registers                              ; 37    ;
-; Number of registers using Synchronous Clear  ; 0     ;
+; Total registers                              ; 47    ;
+; Number of registers using Synchronous Clear  ; 23    ;
 ; Number of registers using Synchronous Load   ; 0     ;
-; Number of registers using Asynchronous Clear ; 26    ;
+; Number of registers using Asynchronous Clear ; 47    ;
 ; Number of registers using Asynchronous Load  ; 0     ;
-; Number of registers using Clock Enable       ; 0     ;
+; Number of registers using Clock Enable       ; 4     ;
 ; Number of registers using Preset             ; 0     ;
 +----------------------------------------------+-------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                           ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
+; 3:1                ; 6 bits    ; 12 LEs        ; 6 LEs                ; 6 LEs                  ; Yes        ; |DigitalClock|sec[1]       ;
+; 6:1                ; 4 bits    ; 16 LEs        ; 4 LEs                ; 12 LEs                 ; Yes        ; |DigitalClock|cnt3[2]      ;
+; 7:1                ; 4 bits    ; 16 LEs        ; 4 LEs                ; 12 LEs                 ; Yes        ; |DigitalClock|cnt2[1]      ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+----------------------------+
 
 
 +-------------------------------+
@@ -227,34 +266,64 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 21.1.0 Build 842 10/21/2021 SJ Lite Edition
-    Info: Processing started: Thu Dec 21 11:51:59 2023
+    Info: Processing started: Thu Feb  1 11:57:31 2024
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off DigitalClock -c DigitalClock
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file digitalclock.v
     Info (12023): Found entity 1: DigitalClock File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 1
 Info (12127): Elaborating entity "DigitalClock" for the top level hierarchy
+Warning (10240): Verilog HDL Always Construct warning at DigitalClock.v(37): inferring latch(es) for variable "divFigure", which holds its previous value in one or more paths through the always construct File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Warning (10240): Verilog HDL Always Construct warning at DigitalClock.v(37): inferring latch(es) for variable "switch_h", which holds its previous value in one or more paths through the always construct File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "switch_h" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[0]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[1]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[2]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[3]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[4]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[5]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[6]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[7]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[8]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[9]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[10]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[11]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[12]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[13]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[14]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[15]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[16]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[17]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[18]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[19]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[20]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[21]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (10041): Inferred latch for "divFigure[22]" at DigitalClock.v(37) File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+Info (13025): Duplicate LATCH primitives merged into single LATCH primitive
+    Info (13026): Duplicate LATCH primitive "divFigure[5]" merged with LATCH primitive "divFigure[4]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[19]" merged with LATCH primitive "divFigure[6]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[20]" merged with LATCH primitive "divFigure[6]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[21]" merged with LATCH primitive "divFigure[6]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[15]" merged with LATCH primitive "divFigure[10]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[18]" merged with LATCH primitive "divFigure[16]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
+    Info (13026): Duplicate LATCH primitive "divFigure[22]" merged with LATCH primitive "divFigure[17]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 37
 Warning (13024): Output pins are stuck at VCC or GND
     Warning (13410): Pin "DLED[6]" is stuck at VCC File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 4
     Warning (13410): Pin "DLED[7]" is stuck at VCC File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 4
-Info (17049): 12 registers lost all their fanouts during netlist optimizations.
-Warning (21074): Design contains 8 input pin(s) that do not drive logic
-    Warning (15610): No output dependent on input pin "TSW[0]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
-    Warning (15610): No output dependent on input pin "TSW[1]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
-    Warning (15610): No output dependent on input pin "TSW[2]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
-    Warning (15610): No output dependent on input pin "TSW[3]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
+    Warning (13410): Pin "SLED3[1]" is stuck at GND File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 4
+    Warning (13410): Pin "SLED3[7]" is stuck at VCC File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 4
+Warning (21074): Design contains 3 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "TSW[4]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
     Warning (15610): No output dependent on input pin "TSW[5]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
     Warning (15610): No output dependent on input pin "TSW[6]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
-    Warning (15610): No output dependent on input pin "TSW[7]" File: C:/Users/mi201326/Documents/verilog HDL/DigitalClock/DigitalClock.v Line: 3
-Info (21057): Implemented 126 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 168 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 10 input pins
     Info (21059): Implemented 40 output pins
-    Info (21061): Implemented 76 logic cells
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 13 warnings
-    Info: Peak virtual memory: 4711 megabytes
-    Info: Processing ended: Thu Dec 21 11:52:13 2023
-    Info: Elapsed time: 00:00:14
-    Info: Total CPU time (on all processors): 00:00:33
+    Info (21061): Implemented 118 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 12 warnings
+    Info: Peak virtual memory: 4722 megabytes
+    Info: Processing ended: Thu Feb  1 11:57:52 2024
+    Info: Elapsed time: 00:00:21
+    Info: Total CPU time (on all processors): 00:00:39
 
 

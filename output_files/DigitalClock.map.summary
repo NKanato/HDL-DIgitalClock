@@ -1,9 +1,9 @@
-Analysis & Synthesis Status : Successful - Thu Dec 21 11:52:13 2023
+Analysis & Synthesis Status : Successful - Thu Feb  1 11:57:52 2024
 Quartus Prime Version : 21.1.0 Build 842 10/21/2021 SJ Lite Edition
 Revision Name : DigitalClock
 Top-level Entity Name : DigitalClock
 Family : MAX II
-Total logic elements : 76
+Total logic elements : 118
 Total pins : 50
 Total virtual pins : 0
 UFM blocks : 0 / 1 ( 0 % )

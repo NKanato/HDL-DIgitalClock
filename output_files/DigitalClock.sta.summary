@@ -2,57 +2,53 @@
 Timing Analyzer Summary
 ------------------------------------------------------------
 
-Type  : Setup 'div[10]'
-Slack : -4.812
-TNS   : -28.315
-
 Type  : Setup 'pCLK'
-Slack : -3.955
-TNS   : -36.605
+Slack : -9.343
+TNS   : -209.811
 
 Type  : Setup 'cy2'
-Slack : -1.903
-TNS   : -8.798
+Slack : -4.985
+TNS   : -25.232
 
-Type  : Setup 'cy0'
-Slack : -1.878
-TNS   : -9.022
-
-Type  : Setup 'cy3'
-Slack : -1.867
-TNS   : -7.465
+Type  : Setup 'clk'
+Slack : -4.661
+TNS   : -29.506
 
 Type  : Setup 'cy1'
-Slack : -1.839
-TNS   : -8.647
+Slack : -2.171
+TNS   : -9.628
 
-Type  : Hold 'pCLK'
-Slack : -2.398
-TNS   : -2.398
+Type  : Setup 'cy0'
+Slack : -1.821
+TNS   : -8.585
+
+Type  : Hold 'clk'
+Slack : -3.858
+TNS   : -3.858
 
 Type  : Hold 'cy2'
-Slack : 1.710
+Slack : -0.229
+TNS   : -0.229
+
+Type  : Hold 'cy1'
+Slack : 1.773
 TNS   : 0.000
 
 Type  : Hold 'cy0'
-Slack : 1.736
+Slack : 1.780
 TNS   : 0.000
 
-Type  : Hold 'cy1'
-Slack : 1.741
-TNS   : 0.000
-
-Type  : Hold 'cy3'
-Slack : 1.746
-TNS   : 0.000
-
-Type  : Hold 'div[10]'
-Slack : 2.163
+Type  : Hold 'pCLK'
+Slack : 2.046
 TNS   : 0.000
 
 Type  : Minimum Pulse Width 'pCLK'
 Slack : -2.289
 TNS   : -2.289
+
+Type  : Minimum Pulse Width 'clk'
+Slack : 0.234
+TNS   : 0.000
 
 Type  : Minimum Pulse Width 'cy0'
 Slack : 0.234
@@ -63,14 +59,6 @@ Slack : 0.234
 TNS   : 0.000
 
 Type  : Minimum Pulse Width 'cy2'
-Slack : 0.234
-TNS   : 0.000
-
-Type  : Minimum Pulse Width 'cy3'
-Slack : 0.234
-TNS   : 0.000
-
-Type  : Minimum Pulse Width 'div[10]'
 Slack : 0.234
 TNS   : 0.000
 

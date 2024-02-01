@@ -37,14 +37,10 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 	always @( posedge pCLK or negedge nRST)begin	//切り替え用のスイッチを読む
 	if ( pCLK == 1'b1 ) begin	//スイッチはクロックの立ち上がりの時に読まないとだめらしい
 			//時間が進む速さ切り替え
-			if (TSW[0] == 0) begin
-				divFigure <= 3999999;//実験用で速くしておく。もとは3999999
-			end else if( TSW[2] == 0) begin
-				divFigure <= 39999;
-			end else if( TSW[3] == 0) begin
-				divFigure <= 399;
-			end else begin
+			if (TSW[0] == 1) begin
 				divFigure <= 7999999;
+			end else if (TSW[0] == 0) begin
+				divFigure <= 399;//実験用で速くしておく。もとは3999999
 			end
 
 			//12/24時間切り替え
@@ -183,3 +179,22 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 		end
 	endfunction
 endmodule
+
+module Readsensor(pCLK, nRST, DATA, SIGNAL);
+	input pCLK, nRST;
+	input DATA;
+	output SIGNAL;
+
+	always @(posedge clk)
+  		#22 SIGNAL = 1;	//SIGNALをHIGHにして18msまつ
+	always @(posedge clk)
+  		#1 SIGNAL = 0;	//SIGNALをLOWにして40us待つ//受信の処理はuart,とか見ながら
+endmodule
+
+/*
+参考サイト
+https://akizukidenshi.com/goodsaffix/DHT11_20180119.pdf
+https://jp-seemore.com/iot/11638/#toc7
+https://jp-seemore.com/iot/11763/
+https://os.mbed.com/users/fossum_13/code/DHT11//file/5da6f6de3e42/Dht11.cpp/
+*/
