@@ -166,7 +166,7 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3,CDS);
       input[3:0] in;
       begin
          if(cdata == 0)begin
-				dec_led = 8'b01111111;
+				dec_led = 8'b11111111;
 			end else begin
 				case ( in )
 					4'b0000: dec_led = 8'b11000000;
@@ -193,32 +193,12 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3,CDS);
 			led = 8'b11111111;
 		end else if(switch_h == 1'b1) begin
 			led = ~((8'b11111111 & in) | 8'b10000000);
-			if(cdata == 1) begin
-				led = ~((8'b11111111 & in) | 8'b11000000);
-			end else if(cdata == 0) begin
-				led = ~((8'b11111111 & in) | 8'b10000000);
-			end
 		end else begin
-			//led = ~(8'b11111111 & in);
-			if(cdata == 1) begin
-				led = ~((8'b11111111 & in) | 8'b01000000);
-			end else if(cdata == 0) begin
-				led = ~((8'b11111111 & in) | 8'b00000000);
-			end
+			led = ~(8'b11111111 & in);
 		end
 	endfunction
 endmodule
 
 
 
-/*module CDS_Sensor (pCLK, nRST, analog_input, digital_output);
-   input pCLK,nRST; // クロック信号
-   input [7:0] analog_input; // アナログ入力信号
-   output reg [7:0] digital_output; // デジタル出力信号
-
-
-	reg [7:0] comparator_outputs; // 比較器の出力
-	reg [7:0] threshold = 8'b01111111; // 閾値（適切に調整してください）
-
-endmodule*/
 
