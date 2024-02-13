@@ -1,6 +1,7 @@
-module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
+module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3,CDS);
    input pCLK, nRST;
    input [7:0] TSW;
+	input CDS;
    output [7:0] DLED, SLED0, SLED1, SLED2, SLED3;
 
    //変数
@@ -10,7 +11,9 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 	reg [22:0] div;	//分周回路用
    reg clk;
 	reg switch_h;//12時間表記と24時間表記を切り替えるための変数
+	//reg noon;
 	reg [22:0] divFigure;
+	reg cdata;		 //cdsセンサ用のalways文からの信号
 
 	assign SLED3 = dec_led( cnt3 );
 	assign SLED2 = dec_led( cnt2 );
@@ -18,9 +21,7 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    assign SLED0 = dec_led( cnt0 );
 	assign DLED  = led ( sec );
 
-
    always @( posedge pCLK or negedge nRST ) begin
-
       if ( nRST == 1'b0 ) begin
          div <= 0; // divは何bitでしょう？
          clk <= 1'b0;
@@ -35,7 +36,7 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 
 
 	always @( posedge pCLK or negedge nRST)begin	//切り替え用のスイッチを読む
-	if ( pCLK == 1'b1 ) begin	//スイッチはクロックの立ち上がりの時に読まないとだめらしい
+		if ( pCLK == 1'b1 ) begin	//スイッチはクロックの立ち上がりの時に読まないとだめらしい
 			//時間が進む速さ切り替え
 			if (TSW[0] == 0) begin
 				divFigure <= 3999999;//実験用で速くしておく。もとは3999999
@@ -56,11 +57,20 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 		end
 	end
 
-
+	//cdsセンサ読み取り ADコンバーターにする
+	always @( posedge pCLK or negedge nRST)begin
+		if ( pCLK == 1'b1 ) begin
+			cdata <= CDS;
+		end
+	end
+	
+	/*always @(CDS)begin
+		cdata <= 1;
+	end*/
 
    // 秒done
    always @( posedge clk or negedge nRST ) begin//div[15]がいい感じデフォ22//div[22]&div[21]&div[20]
-      if ( nRST == 1'b0 ) begin
+		if ( nRST == 1'b0 ) begin
          sec <= 6'b000000;
          cy0  <= 1'b0;
       end else if ( sec == 59 ) begin
@@ -155,19 +165,23 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
    function [7:0] dec_led;
       input[3:0] in;
       begin
-         case ( in )
-            4'b0000: dec_led = 8'b11000000;
-            4'b0001: dec_led = 8'b11111001;
-            4'b0010: dec_led = 8'b10100100;
-            4'b0011: dec_led = 8'b10110000;
-            4'b0100: dec_led = 8'b10011001;
-            4'b0101: dec_led = 8'b10010010;
-            4'b0110: dec_led = 8'b10000010;
-            4'b0111: dec_led = 8'b11011000;
-            4'b1000: dec_led = 8'b10000000;
-            4'b1001: dec_led = 8'b10010000;
-            default: dec_led = 8'b01111111;
-         endcase
+         if(cdata == 0)begin
+				dec_led = 8'b01111111;
+			end else begin
+				case ( in )
+					4'b0000: dec_led = 8'b11000000;
+					4'b0001: dec_led = 8'b11111001;
+					4'b0010: dec_led = 8'b10100100;
+					4'b0011: dec_led = 8'b10110000;
+					4'b0100: dec_led = 8'b10011001;
+					4'b0101: dec_led = 8'b10010010;
+					4'b0110: dec_led = 8'b10000010;
+					4'b0111: dec_led = 8'b11011000;
+					4'b1000: dec_led = 8'b10000000;
+					4'b1001: dec_led = 8'b10010000;
+					default: dec_led = 8'b01111111;
+				endcase
+			end
       end
    endfunction
 
@@ -177,9 +191,34 @@ module DigitalClock (pCLK, nRST, TSW, DLED, SLED0, SLED1, SLED2, SLED3);
 		//ビットシフトで秒を表示
 		if(in == 0) begin
 			led = 8'b11111111;
-		end
-		else begin
-			led = ~(8'b11111111 & in);
+		end else if(switch_h == 1'b1) begin
+			led = ~((8'b11111111 & in) | 8'b10000000);
+			if(cdata == 1) begin
+				led = ~((8'b11111111 & in) | 8'b11000000);
+			end else if(cdata == 0) begin
+				led = ~((8'b11111111 & in) | 8'b10000000);
+			end
+		end else begin
+			//led = ~(8'b11111111 & in);
+			if(cdata == 1) begin
+				led = ~((8'b11111111 & in) | 8'b01000000);
+			end else if(cdata == 0) begin
+				led = ~((8'b11111111 & in) | 8'b00000000);
+			end
 		end
 	endfunction
 endmodule
+
+
+
+/*module CDS_Sensor (pCLK, nRST, analog_input, digital_output);
+   input pCLK,nRST; // クロック信号
+   input [7:0] analog_input; // アナログ入力信号
+   output reg [7:0] digital_output; // デジタル出力信号
+
+
+	reg [7:0] comparator_outputs; // 比較器の出力
+	reg [7:0] threshold = 8'b01111111; // 閾値（適切に調整してください）
+
+endmodule*/
+
